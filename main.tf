@@ -47,30 +47,31 @@ resource "aws_instance" "node1" {
   user_data = <<-EOF
 #!/bin/bash
 # Add Docker's official GPG key:
-sudo apt update
-sudo apt install -y ca-certificates curl gnupg
-sudo install -m 0755 -d /etc/apt/keyrings
+apt update
+apt install -y ca-certificates curl gnupg
+install -m 0755 -d /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-sudo chmod a+r /etc/apt/keyrings/docker.gpg
+chmod a+r /etc/apt/keyrings/docker.gpg
 
 # Add the repository to Apt sources:
 echo \
   "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
   "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
-  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-sudo apt update
-sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-sudo systemctl enable docker.service
-sudo systemctl enable containerd.service
-sudo groupadd docker
-sudo usermod -aG docker admin
+  tee /etc/apt/sources.list.d/docker.list > /dev/null
+apt update
+apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+systemctl enable docker.service
+systemctl enable containerd.service
+groupadd docker
+usermod -aG docker admin
 curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-sudo install minikube-linux-amd64 /usr/local/bin/minikube
+install minikube-linux-amd64 /usr/local/bin/minikube
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-sudo install kubectl /usr/local/bin/kubectl
+install kubectl /usr/local/bin/kubectl
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
 chmod u+x get_helm.sh
-sudo ./get_helm.sh
+./get_helm.sh
+su - admin -c minikube start
 EOF
 
 }
